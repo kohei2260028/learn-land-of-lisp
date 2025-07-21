@@ -31,3 +31,10 @@
     ((eq x 3) 'is3)
     (otherwise 'isnot3)))
 (is3 3)
+(if (member nil '(4 3 nil 5))
+    'yes
+    'no)
+(member nil '(4 3 nil 5))
+(equal "BOB" "bob")
+
+(equalp "BOB" "bob")
