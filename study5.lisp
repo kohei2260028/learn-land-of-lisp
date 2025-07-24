@@ -17,7 +17,6 @@
 (substitute-if #\e #'alphanumericp "fdso-ii&%$#")
 (defun dot-name (exp)
   (substitute-if #\_ (complement #'alphanumericp) (prin1-to-string exp)))
-(dot-name 'dsfd8932&$)
 (defparameter *max-label-length* 30)
 (write-to-string '(this is a pen) :pretty nil)
 (defun dot-label (exp)
@@ -34,7 +33,7 @@
           (princ (dot-name (car node)))
           (princ "[label=\"")
           (princ (dot-label node))
-          (princ "\";"))
+          (princ "\"];"))
         nodes))
 (nodes->dot *wizard-nodes*)
 
@@ -47,7 +46,30 @@
                  (princ (dot-name (car edge)))
                  (princ "[label=\"")
                  (princ (dot-label (cdr edge)))
-                 (princ "\";"))
+                 (princ "\"];"))
                (cdr node)))
        edges))
 (edges->dot *wizard-edges*)
+(defun graph->dot (nodes edges)
+  (princ "digraph{")
+  (nodes->dot nodes)
+  (edges->dot edges)
+  (princ "}"))
+(graph->dot *wizard-nodes* *wizard-edges*)
+(defun dot->png (fname thunk)
+  (with-open-file (*standard-output*
+                   (concatenate 'string fname ".dot")
+                   :direction :output
+                   :if-exists :supersede)
+    (funcall thunk))
+  (ext:shell (concatenate 'string "dot -Tpng -o " fname ".png " fname ".dot")))
+(with-open-file (my-stream
+                 "testfile.txt"
+                 :direction :output
+                 :if-exists :supersede)
+  (princ "Hello File!" my-stream))
+(defun graph->png (fname nodes edges)
+  (dot->png fname
+            (lambda ()
+              (graph->dot nodes edges))))
+(graph->png "wizard" *wizard-nodes* *wizard-edges*)
