@@ -1,0 +1,7 @@
+(format t "Add onion rings for onky ~$ dollars more!" 1.5)
+(princ  (reverse (format nil "test ~$ num" 1.5)))
+(defparameter animal '("dog" "tick" "tiger" "walrus" "kangaroo" "cat"))
+(defun random-animal ()
+  (nth (random 5) animal))
+(defun print-nums ()
+  (format t "|~{~<|~%|~,33:;~2d ~>~}|" (loop for x below 100 collect x)))
